@@ -1,11 +1,16 @@
-package promrus
+package promlog
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
 	"k8s.io/klog/v2"
 )
 
-var allSeverities = klog.GetSeverityNames()
+var supportedSeverityLevels = []string{
+	klog.InfoSeverityLevel,
+	klog.WarningSeverityLevel,
+	klog.ErrorSeverityLevel,
+	klog.FatalSeverityLevel,
+}
 
 // PrometheusHook exposes Prometheus counters for each of klog severity levels.
 type PrometheusHook struct {
@@ -24,7 +29,7 @@ func NewPrometheusHook() (*PrometheusHook, error) {
 		Help: "Total number of log messages.",
 	}, []string{"severity"})
 	// Initialise counters for all supported severity:
-	for _, severity := range allSeverities {
+	for _, severity := range supportedSeverityLevels {
 		counterVec.WithLabelValues(severity)
 	}
 	// Try to unregister the counter vector,
@@ -66,5 +71,5 @@ func (hook *PrometheusHook) Fire(s string, args ...interface{}) error {
 // Hook will be fired in all the cases when severity is greater than
 // or equal to the severity level
 func (hook *PrometheusHook) SeverityLevel() string {
-	return allSeverities[0]
+	return klog.InfoSeverityLevel
 }
