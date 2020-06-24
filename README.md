@@ -1,28 +1,9 @@
-<p align="left">
-	<a href="https://github.com/practo/promlog/releases/latest">
-		<img src="https://img.shields.io/github/release/practo/promlog.svg"/>
-	</a>
-	<a href="https://travis-ci.org/practo/promlog">
-		<img src="https://img.shields.io/travis/practo/promlog.svg"/>
-	</a>
-	<a href="https://coveralls.io/github/practo/promlog?branch=master">
-		<img src="https://img.shields.io/coveralls/practo/promlog.svg"/>
-	</a>
-	<a href="https://goreportcard.com/report/github.com/practo/promlog">
-		<img src="https://goreportcard.com/badge/github.com/practo/promlog"/>
-	</a>
-	<a href="LICENSE">
-		<img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg"/>
-	</a>
-</p>
-
 # promlog
-klog hook to expose the number of log messages as Prometheus metrics:
+[forked klog](https://github.com/practo/klog) hook to expose the number of log messages as Prometheus metrics:
 ```
 log_messages{level="INFO"}
 log_messages{level="WARNING"}
 log_messages{level="ERROR"}
-log_messages{level="FATAL"}
 ```
 
 ## Usage
@@ -61,14 +42,21 @@ func main() {
 
 Run the above program:
 ```
-$ go run main.go
-to fill
+$ cd example && go run main.go
+I0624 12:24:55.951218   46000 main.go:25] foo
+I0624 12:24:56.952746   46000 main.go:25] foo
+I0624 12:24:57.953113   46000 main.go:25] foo
+I0624 12:24:58.954579   46000 main.go:25] foo
 ```
 
 Scrape the Prometheus metrics exposed by the hook:
 ```
 $ curl -fsS localhost:8080 | grep log_messages
-to fill
+# HELP log_messages_total Total number of log messages.
+# TYPE log_messages_total counter
+log_messages_total{severity="ERROR"} 0
+log_messages_total{severity="INFO"} 42
+log_messages_total{severity="WARNING"} 0
 ```
 
 ## Compile
@@ -79,5 +67,10 @@ $ go build
 ## Test
 ```
 $ go test
+I0624 12:28:12.049327   46304 promlog_test.go:48] this is at info level!
+W0624 12:28:12.050440   46304 promlog_test.go:54] this is at warning level!
+E0624 12:28:12.052603   46304 promlog_test.go:60] this is at error level!
+PASS
+ok  	github.com/practo/promlog	0.336s
 
 ```
