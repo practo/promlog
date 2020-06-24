@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/practo/klog/v2"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"k8s.io/klog/v2"
 
 	"github.com/practo/promlog"
 )
@@ -95,7 +95,6 @@ func httpGetMetrics(t *testing.T) []string {
 		t.Error("httpGetMetrics returned empty response")
 		return []string{}
 	}
-	fmt.Print(lines)
 	return lines
 }
 

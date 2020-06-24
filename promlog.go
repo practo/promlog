@@ -1,15 +1,14 @@
 package promlog
 
 import (
+	"github.com/practo/klog/v2"
 	"github.com/prometheus/client_golang/prometheus"
-	"k8s.io/klog/v2"
 )
 
 var supportedSeverityLevels = []string{
 	klog.InfoSeverityLevel,
 	klog.WarningSeverityLevel,
 	klog.ErrorSeverityLevel,
-	klog.FatalSeverityLevel,
 }
 
 // PrometheusHook exposes Prometheus counters for each of klog severity levels.
