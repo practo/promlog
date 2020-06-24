@@ -17,7 +17,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	log "k8s.io/klog/v2"
+	log "github.com/practo/klog/v2"
 	"github.com/practo/promlog"
 )
 
