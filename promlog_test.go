@@ -17,6 +17,7 @@ import (
 const (
 	addr     string = ":8080"
 	endpoint string = "/metrics"
+	testPrefix string = "promlog"
 )
 
 func getSeverityForLine(line string) string {
@@ -35,7 +36,7 @@ func getSeverityForLine(line string) string {
 
 func TestExposeAndQueryKlogCounters(t *testing.T) {
 	// Create Prometheus hook and configure klog to use it:
-	hook := promlog.MustNewPrometheusHook()
+	hook := promlog.MustNewPrometheusHook(testPrefix)
 	klog.AddHook(hook)
 
 	server := httpServePrometheusMetrics(t)
@@ -105,7 +106,8 @@ func countFor(t *testing.T, severity string, lines []string) int {
 	//   # HELP test_debug Number of log statements at debug level.
 	//   # TYPE test_debug counter
 	//   test_debug 0
-	metric := fmt.Sprintf("log_messages_total{severity=\"%v\"}", severity)
+	metric := fmt.Sprintf(
+		testPrefix + "log_messages_total{severity=\"%v\"}", severity)
 	for _, line := range lines {
 		items := strings.Split(line, " ")
 		if len(items) != 2 { // e.g. {"test_debug", "0"}
