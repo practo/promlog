@@ -17,6 +17,7 @@ import (
 const (
 	addr     string = ":8080"
 	endpoint string = "/metrics"
+	testSeverityLevel string = "INFO"
 	testPrefix string = "promlog"
 )
 
@@ -36,7 +37,7 @@ func getSeverityForLine(line string) string {
 
 func TestExposeAndQueryKlogCounters(t *testing.T) {
 	// Create Prometheus hook and configure klog to use it:
-	hook := promlog.MustNewPrometheusHook(testPrefix)
+	hook := promlog.MustNewPrometheusHook(testPrefix, testSeverityLevel)
 	klog.AddHook(hook)
 
 	server := httpServePrometheusMetrics(t)
@@ -65,6 +66,13 @@ func TestExposeAndQueryKlogCounters(t *testing.T) {
 	validateResult(t, 1, countFor(t, klog.ErrorSeverityLevel, lines))
 
 	server.Close()
+}
+
+func TestInvalidSeverityLevel(t *testing.T) {
+	_, err := promlog.NewPrometheusHook(testPrefix, "PANIC")
+	if err == nil {
+		t.Error("expected invalid severity error")
+	}
 }
 
 // httpServePrometheusMetrics exposes the Prometheus metrics

@@ -11,7 +11,7 @@ import (
 
 func main() {
 	// Create the Prometheus hook:
-	hook := promlog.MustNewPrometheusHook("")
+	hook := promlog.MustNewPrometheusHook("", klog.InfoSeverityLevel)
 
 	// Configure klog to use the Prometheus hook:
 	klog.AddHook(hook)
