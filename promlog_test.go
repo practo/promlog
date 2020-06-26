@@ -15,10 +15,10 @@ import (
 )
 
 const (
-	addr     string = ":8080"
-	endpoint string = "/metrics"
+	addr              string = ":8080"
+	endpoint          string = "/metrics"
 	testSeverityLevel string = "INFO"
-	testPrefix string = "promlog"
+	testPrefix        string = "promlog"
 )
 
 func getSeverityForLine(line string) string {
@@ -115,7 +115,7 @@ func countFor(t *testing.T, severity string, lines []string) int {
 	//   # TYPE test_debug counter
 	//   test_debug 0
 	metric := fmt.Sprintf(
-		testPrefix + "log_messages_total{severity=\"%v\"}", severity)
+		testPrefix+"log_messages_total{severity=\"%v\"}", severity)
 	for _, line := range lines {
 		items := strings.Split(line, " ")
 		if len(items) != 2 { // e.g. {"test_debug", "0"}

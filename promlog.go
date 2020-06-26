@@ -18,7 +18,7 @@ type PrometheusHook struct {
 	// severityLevel specifies the required level for the log metrics
 	// that must be emitted as prometheus metric
 	severityLevel string
-	counterVec *prometheus.CounterVec
+	counterVec    *prometheus.CounterVec
 }
 
 // NewPrometheusHook creates a new instance of PrometheusHook
@@ -31,33 +31,32 @@ func NewPrometheusHook(
 	metricPrefix string, severityLevel string) (*PrometheusHook, error) {
 
 	counterVec := prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name:  metricPrefix + "log_messages_total",
+		Name: metricPrefix + "log_messages_total",
 		Help: "Total number of log messages.",
 	}, []string{"severity"})
-
 
 	var severityLevels []string
 
 	switch severityLevel {
-		case klog.InfoSeverityLevel:
-			severityLevels = []string{
-				klog.InfoSeverityLevel,
-				klog.WarningSeverityLevel,
-				klog.ErrorSeverityLevel,
-			}
-		case klog.WarningSeverityLevel:
-			severityLevels = []string{
-				klog.WarningSeverityLevel,
-				klog.ErrorSeverityLevel,
-			}
-		case klog.ErrorSeverityLevel:
-			severityLevels = []string{
-				klog.ErrorSeverityLevel,
-			}
-		default:
-			return nil, fmt.Errorf(
-				"only following severity levels are supported: %v",
-				supportedSeverityLevels)
+	case klog.InfoSeverityLevel:
+		severityLevels = []string{
+			klog.InfoSeverityLevel,
+			klog.WarningSeverityLevel,
+			klog.ErrorSeverityLevel,
+		}
+	case klog.WarningSeverityLevel:
+		severityLevels = []string{
+			klog.WarningSeverityLevel,
+			klog.ErrorSeverityLevel,
+		}
+	case klog.ErrorSeverityLevel:
+		severityLevels = []string{
+			klog.ErrorSeverityLevel,
+		}
+	default:
+		return nil, fmt.Errorf(
+			"only following severity levels are supported: %v",
+			supportedSeverityLevels)
 	}
 
 	// Initialise counters for all supported severity:
@@ -78,7 +77,7 @@ func NewPrometheusHook(
 
 	return &PrometheusHook{
 		severityLevel: severityLevel,
-		counterVec: counterVec,
+		counterVec:    counterVec,
 	}, nil
 }
 
